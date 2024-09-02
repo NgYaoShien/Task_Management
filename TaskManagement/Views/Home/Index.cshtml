@@ -1,0 +1,110 @@
+﻿@model IEnumerable<TaskManagement.Models.ModelTask>
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+@section Styles
+{
+   <style>
+       textarea {
+           height: 100px !important;
+           resize: none;
+        }
+
+        .form {
+            padding: 1.4rem;
+            border: 1px solid rgba(0,0,0,.125);
+            border-radius: 7px;
+        }
+   </style>
+}
+
+<div class="text-center mb-5">
+    <h1 class="display-4">Task Management</h1>
+
+</div>
+<div class="row px-4">
+    @*<div>
+        @if (TempData.ContainsKey("SUCCESS"))
+        {
+            <div class="alert alert-success">
+                <strong>SUCCESS:</strong> @TempData["SUCCESS"]
+            </div>
+        }
+        else if (TempData.ContainsKey("ERROR"))
+        {
+            <div class="alert alert-danger">
+                <strong>ERROR:</strong> @TempData["ERROR"]
+            </div>
+        }
+    </div>*@
+    <form asp-action="Index" method="POST" class="col-12 col-sm-4 mb-4">
+        <div class="form">
+            <dt class="mb-3">Create New Task</dt>
+
+            <div class="form-floating mb-3">
+                <input id="title" type="text" name="Title" class="form-control" placeholder="Enter title here" required />
+                <label for="title">Title</label>
+            </div>
+            <div class="form-floating mb-3">
+                <textarea id="descr" type="text" name="Descr" class="form-control" placeholder="Enter description here" required></textarea>
+                <label for="descr">Description</label>
+            </div>
+            <div class="text-end">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-add"></i> Add Task</button>
+            </div>
+        </div>
+    </form>
+
+    @if (Model.Any())
+    {
+        <div class="col-12 col-sm-8 table-responsive">
+            <table class="table table-sm table-hover table-bordered text-center">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Title</th>
+                        <th>Date Created</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int index = 0;
+                    }
+                    @foreach (var item in Model)
+                    {
+                        index++;
+                        <tr>
+                            <td>
+                                <a asp-action="Edit" asp-route-taskid="@item.Id">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </a>
+                            </td>
+                            <td class="text-start">@item.Title</td>
+                            <td>@item.DateCreate</td>
+                            <td>@(item.Status == "-" ? Html.Raw("<span class='text-warning'>Pending</span>") : Html.Raw("<i class='fas fa-check text-success'></i>"))</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+@section Scripts
+{
+    @if (TempData.ContainsKey("SUCCESS"))
+    {
+        <script>
+            Swal.fire("Success", '@TempData["SUCCESS"]', "success");
+        </script>
+    }
+    else if (TempData.ContainsKey("ERROR"))
+    {
+        <script>
+            Swal.fire("Error", '@TempData["ERROR"]', "error");
+        </script>
+    }
+}
+

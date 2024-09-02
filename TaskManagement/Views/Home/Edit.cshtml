@@ -1,0 +1,163 @@
+﻿@model TaskManagement.Models.ModelTask
+
+@{
+    ViewData["Title"] = "Edit Page";
+}
+@section Styles
+{
+   <style>
+       textarea {
+           height: 100px !important;
+           resize: none;
+       }
+       .form {
+           padding: 1.4rem;
+           border: 1px solid rgba(0,0,0,.125);
+           border-radius: 7px;
+       }
+       .invisible {
+           height: 0;
+           padding: 0;
+           display: none;
+       }
+       .btn-light {
+            border: 1px solid rgba(0,0,0,.125);
+       }
+   </style>
+}
+
+<div class="text-center mb-5">
+    <h1 class="display-4">Task Management</h1>
+
+</div>
+<div class="row px-4">
+    <form method="POST" class="col-12 col-sm-12 mb-4">
+        <div class="form row">
+            <dt class="mb-3">Edit Task Details</dt>
+            
+            @*<div>
+                @if (TempData.ContainsKey("SUCCESS"))
+                {
+                    <div class="alert alert-success">
+                        <strong>SUCCESS:</strong> @TempData["SUCCESS"]
+                    </div>
+                }
+                else if (TempData.ContainsKey("ERROR"))
+                {
+                    <div class="alert alert-danger">
+                        <strong>ERROR:</strong> @TempData["ERROR"]
+                    </div>
+                }
+            </div>*@
+
+            <input id="id" type="text" name="Id" class="invisible" placeholder="Enter title here" value="@Model.Id" required />
+            <div class="col-12 col-sm-4">
+                <div class="form-floating mb-3">
+                    <input id="title" type="text" name="Title" class="form-control" placeholder="Enter title here" value="@Model.Title" required />
+                    <label for="title">Title</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <textarea id="descr" type="text" name="Descr" class="form-control" placeholder="Enter description here" required>@Model.Descr</textarea>
+                    <label for="descr">Description</label>
+                </div>
+            </div>
+            <div class="col-12 col-sm-4">
+                <div class="form-floating mb-3">
+                    <input id="DateCreate" type="text" name="DateCreate" class="form-control" placeholder="Date Created" value="@Model.DateCreate" disabled />
+                    <label for="DateCreate">Date Created</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input id="mddate" type="text" name="LogDate" class="form-control" placeholder="Last Modified" required value="@Model.LogDate" disabled />
+                    <label for="mddate">Last Modified</label>
+                </div>
+            </div>
+            <div class="col-12 col-sm-4">
+                <div class="form-floating mb-3">
+                    <input id="statusdescr" type="text" name="StatusDescr" class="form-control" placeholder="Status" required value="@Model.StatusDescr" disabled />
+                    <label for="statusdescr">Status</label>
+                </div>
+            </div>
+
+            <div class="col-4 mb-action-container">
+                <button type="button" class="btn btn-light" onclick="window.location.href='/'"><i class="fas fa-arrow-left"></i></button>
+            </div>
+            <div class="col-8 text-end mb-action-container">
+                <button type="button" class="btn btn-primary" onclick="saveConfirmation()"><i class="fas fa-save"></i></button>
+                <button type="button" class="btn btn-success" onclick="completeConfirmation()"><i class="fas fa-check"></i></button>
+                <button type="button" class="btn btn-danger" onclick="deleteConfirmation()"><i class="fas fa-trash"></i></button>
+            </div>
+            <div class="col-4 dk-action-container">
+                <button type="button" class="btn btn-light" onclick="window.location.href='/'"><i class="fas fa-arrow-left"></i> Back</button>
+            </div>
+            <div class="col-8 text-end dk-action-container">
+                <button type="button" class="btn btn-primary" onclick="saveConfirmation()"><i class="fas fa-save"></i> Save</button>
+                <button type="button" class="btn btn-success" onclick="completeConfirmation()"><i class="fas fa-check"></i> Complete</button>
+                <button type="button" class="btn btn-danger" onclick="deleteConfirmation()"><i class="fas fa-trash"></i> Delete</button>
+            </div>
+
+            <button type="submit" class="btn btn-primary invisible" asp-action="Edit" asp-route-action_name="edit" id="btn_save"><i class="fas fa-save"></i> Save</button>
+            <button type="submit" class="btn btn-success invisible" asp-action="Edit" asp-route-action_name="complete" id="btn_com"><i class="fas fa-check"></i> Complete</button>
+            <button type="submit" class="btn btn-danger invisible" asp-action="Edit" asp-route-action_name="delete" id="btn_delete"><i class="fas fa-trash"></i> Delete</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts
+{
+    @if (TempData.ContainsKey("SUCCESS"))
+    {
+        <script>
+            Swal.fire("Success", '@TempData["SUCCESS"]', "success");
+        </script>
+    }
+    else if (TempData.ContainsKey("ERROR"))
+    {
+        <script>
+            Swal.fire("Error", '@TempData["ERROR"]', "error");
+        </script>
+    }
+
+    <script>
+        function saveConfirmation () {
+            Swal.fire({
+                title: "Confirmation",
+                text: "Are you sure to save changes ?",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: "Confirm"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById("btn_save").click();
+                }
+            });
+        }
+        function deleteConfirmation() {
+            Swal.fire({
+                title: "Confirmation",
+                text: "Are you sure to delete this task ?",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: "Confirm"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById("btn_delete").click();
+                }
+            });
+        }
+        function completeConfirmation() {
+            Swal.fire({
+                title: "Confirmation",
+                text: "Are you sure mark this as complete ?",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: "Confirm"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById("btn_com").click();
+                }
+            });
+        }
+    </script>
+}
+
+
